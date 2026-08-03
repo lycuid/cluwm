@@ -14,8 +14,7 @@ Layouts
 
 Requirements
 ------------
-  - ***free***, ***libre*** and ***open source*** Operating System (currently doesn't support \*BSD).
-  - gnu make
+  - make
   - libx11
   - pkg-config (optional, changes would be required in Makefile)
 
@@ -31,19 +30,19 @@ put the following line in the `~/.xinitrc` file, and use any preferred method (e
 ```sh
 exec cluless
 ```
-Status logs for statusbar ([clubar](https://github.com/lycuid/clubar), in this case) are dumped to `stdout`, which can be redirected in any way suitable.
+Status logs for statusbar ([clubar](https://github.com/lycuid/clubar), in this case) are dumped to `stdout`, which can be redirected in any way suitable. (see `LogFormat` in [src/config.h](src/config.h#L45)
 ```sh
 exec cluless | clubar
 ```
 using fifo.
 ```sh
-STATUS=/tmp/statusbar${DISPLAY}
+STATUS=/tmp/status${DISPLAY}
 [ ! -p ${STATUS} ] && mkfifo ${STATUS}
 
 clubar <${STATUS} &
 exec cluless >${STATUS}
 ```
-using a fifo might be slower compared to other methods, but also can be very convenient as the statusbar program will run independent of the window manager (i.e statusbar can be killed, restarted etc. without killing the window manager process).
+Using fifo, the statusbar program can run independent from the window manager (i.e statusbar can be killed, restarted etc. without killing the window manager process).
 
 Features
 --------
