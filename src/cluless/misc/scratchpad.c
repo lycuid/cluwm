@@ -3,7 +3,6 @@
 #include <cluless/core.h>
 #include <cluless/core/workspace.h>
 #include <config.h>
-#include <stdlib.h>
 
 #define sch_cnt   (1 << 8)
 #define sch_at(i) sch_clients[i % sch_cnt]

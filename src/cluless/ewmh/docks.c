@@ -100,10 +100,13 @@ static void manage_dock(Window window)
         Atom *dock_window = NULL;
         core->get_window_property(window, core->netatoms[NET_WM_WINDOW_TYPE], 1,
                                   (uint8_t **)&dock_window);
-        if (!dock_window ||
-            *dock_window != core->netatoms[NET_WM_WINDOW_TYPE_DOCK])
+        if (!dock_window)
             return;
+        int is_dock = *dock_window != core->netatoms[NET_WM_WINDOW_TYPE_DOCK];
         XFree(dock_window);
+
+        if (!is_dock)
+            return;
     }
 
     // getting strut values for the dock type window.

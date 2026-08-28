@@ -14,8 +14,8 @@ static inline bool apply_window_rule(const WindowRule *rule, const char *val)
 
 void window_rule_apply(Client *c)
 {
-    XClassHint class;
-    XTextProperty property;
+    XClassHint class       = {0};
+    XTextProperty property = {0};
     FOREACH(const WindowRule *rule, window_rules)
     {
         switch (rule->res_type) {
@@ -41,5 +41,11 @@ void window_rule_apply(Client *c)
         }
     }
 DONE:
+    if (class.res_name)
+        XFree(class.res_name);
+    if (class.res_class)
+        XFree(class.res_class);
+    if (property.value)
+        XFree(property.value);
     return;
 }
