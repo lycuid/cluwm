@@ -1,16 +1,16 @@
 // {{{ Includes.
 #include <X11/Xutil.h>
-#include <cluless/bindings.h>
-#include <cluless/core.h>
-#include <cluless/core/logging.h>
-#include <cluless/ewmh/docks.h>
-#include <cluless/layout.h>
-#include <cluless/layout/full.h>
-#include <cluless/layout/tall.h>
-#include <cluless/misc/companion.h>
-#include <cluless/misc/magnify.h>
-#include <cluless/misc/scratchpad.h>
-#include <cluless/misc/window_rule.h>
+#include <cluwm/bindings.h>
+#include <cluwm/core.h>
+#include <cluwm/core/logging.h>
+#include <cluwm/ewmh/docks.h>
+#include <cluwm/layout.h>
+#include <cluwm/layout/full.h>
+#include <cluwm/layout/tall.h>
+#include <cluwm/misc/companion.h>
+#include <cluwm/misc/magnify.h>
+#include <cluwm/misc/scratchpad.h>
+#include <cluwm/misc/window_rule.h>
 // }}}
 
 // {{{ Macros used only in this file (gets 'undef'-ed later).

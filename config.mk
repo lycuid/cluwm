@@ -1,4 +1,4 @@
-NAME=cluless
+NAME=cluwm
 VERSION=0.4.12
 
 BUILD=.build
