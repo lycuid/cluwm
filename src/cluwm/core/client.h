@@ -24,7 +24,7 @@ typedef struct Client {
     struct Client *prev, *next;
 } Client;
 
-ENUM(HookType, ClientAdd, ClientRemove);
+typedef enum HookType { ClientAdd, ClientRemove, HookTypeCount } HookType;
 typedef void (*ClientHook)(Client *);
 
 typedef Vector(Client *) ClientVector;

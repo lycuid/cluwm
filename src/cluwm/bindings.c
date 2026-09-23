@@ -84,7 +84,7 @@ void kill_client(const Arg *arg)
     Client *c    = ws_find(curr_ws(mon), ClActive);
     if (!c)
         return;
-    if (!core->send_event(c->window, core->wmatoms[WM_DELETE_WINDOW]))
+    if (!core->send_event(c->window, core->atoms[WM_DELETE_WINDOW]))
         XKillClient(core->dpy, c->window);
     mon_applylayout(mon);
 }

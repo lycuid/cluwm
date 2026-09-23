@@ -26,7 +26,7 @@ void onMotionNotify(const XEvent *);
 void onButtonRelease(const XEvent *);
 void onDestroyNotify(const XEvent *);
 
-static const ClientHook default_client_hooks[NullHookType] = {
+static const ClientHook default_client_hooks[HookTypeCount] = {
     [ClientAdd]    = mon_manage_client,
     [ClientRemove] = mon_unmanage_client,
 };
@@ -130,8 +130,7 @@ void onPropertyNotify(const XEvent *xevent)
     const XPropertyEvent *e = &xevent->xproperty;
     if (e->state == PropertyDelete)
         return;
-    if (e->atom == core->netatoms[NET_WM_NAME] ||
-        e->atom == core->wmatoms[WM_NAME])
+    if (e->atom == core->atoms[_NET_WM_NAME] || e->atom == core->atoms[WM_NAME])
         log_statuslog();
 }
 

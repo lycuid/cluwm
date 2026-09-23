@@ -18,7 +18,7 @@ static const EventHandler sch_event_handlers[LASTEvent] = {
     [DestroyNotify] = sch_destroynotify,
 };
 
-static const ClientHook sch_client_hooks[NullHookType] = {
+static const ClientHook sch_client_hooks[HookTypeCount] = {
     [ClientRemove] = sch_clientremove,
 };
 

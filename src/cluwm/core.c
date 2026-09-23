@@ -49,36 +49,32 @@ void core_init(void)
     local.cursors[CurResize] = XCreateFontCursor(local.dpy, XC_sizing);
     local.cursors[CurMove]   = XCreateFontCursor(local.dpy, XC_fleur);
 
+#define ATOM_REPR(atom) local.atoms[atom] = XInternAtom(local.dpy, #atom, False)
     // ICCC Atoms.
-#define WM_ATOM_REPR(atom)                                                     \
-    local.wmatoms[atom] = XInternAtom(local.dpy, #atom, False)
-    WM_ATOM_REPR(WM_PROTOCOLS);
-    WM_ATOM_REPR(WM_NAME);
-    WM_ATOM_REPR(WM_DELETE_WINDOW);
-    WM_ATOM_REPR(WM_TRANSIENT_FOR);
-    WM_ATOM_REPR(WM_WINDOW_ROLE);
-#undef WM_ATOM_REPR
+    ATOM_REPR(WM_PROTOCOLS);
+    ATOM_REPR(WM_NAME);
+    ATOM_REPR(WM_DELETE_WINDOW);
+    ATOM_REPR(WM_TRANSIENT_FOR);
+    ATOM_REPR(WM_WINDOW_ROLE);
 
     // EWMH Atoms.
-#define NET_ATOM_REPR(atom)                                                    \
-    local.netatoms[atom] = XInternAtom(local.dpy, "_" #atom, False)
-    NET_ATOM_REPR(NET_ACTIVE_WINDOW);
-    NET_ATOM_REPR(NET_CLIENT_LIST);
-    NET_ATOM_REPR(NET_WM_BYPASS_COMPOSITOR);
-    NET_ATOM_REPR(NET_WM_NAME);
-    NET_ATOM_REPR(NET_WM_STRUT);
-    NET_ATOM_REPR(NET_WM_STRUT_PARTIAL);
-    NET_ATOM_REPR(NET_WM_WINDOW_TYPE);
-    NET_ATOM_REPR(NET_WM_WINDOW_TYPE_DOCK);
-#undef NET_ATOM_REPR
+    ATOM_REPR(_NET_ACTIVE_WINDOW);
+    ATOM_REPR(_NET_CLIENT_LIST);
+    ATOM_REPR(_NET_WM_BYPASS_COMPOSITOR);
+    ATOM_REPR(_NET_WM_NAME);
+    ATOM_REPR(_NET_WM_STRUT);
+    ATOM_REPR(_NET_WM_STRUT_PARTIAL);
+    ATOM_REPR(_NET_WM_WINDOW_TYPE);
+    ATOM_REPR(_NET_WM_WINDOW_TYPE_DOCK);
+#undef ATOM_REPR
 
     XStoreName(local.dpy, DefaultRootWindow(local.dpy), NAME "-" VERSION);
     XChangeProperty(local.dpy, DefaultRootWindow(local.dpy),
                     XInternAtom(local.dpy, "_NET_SUPPORTED", False), XA_ATOM,
-                    32, PropModeReplace, (uint8_t *)local.netatoms,
-                    LENGTH(local.netatoms));
+                    32, PropModeReplace, (uint8_t *)local.atoms,
+                    LENGTH(local.atoms));
     XDeleteProperty(local.dpy, DefaultRootWindow(local.dpy),
-                    local.netatoms[NET_CLIENT_LIST]);
+                    local.atoms[_NET_CLIENT_LIST]);
     XChangeWindowAttributes(
         local.dpy, DefaultRootWindow(local.dpy), CWCursor | CWEventMask,
         &(XSetWindowAttributes){.cursor     = local.cursors[CurNormal],
@@ -125,7 +121,7 @@ bool send_event(Window window, Atom protocol)
                 XEvent e               = {.type = ClientMessage};
                 e.xclient.window       = window;
                 e.xclient.format       = 32;
-                e.xclient.message_type = local.wmatoms[WM_PROTOCOLS];
+                e.xclient.message_type = local.atoms[WM_PROTOCOLS];
                 e.xclient.data.l[0]    = protocol;
                 e.xclient.data.l[1]    = CurrentTime;
                 XSendEvent(local.dpy, window, False, NoEventMask, &e);
@@ -147,11 +143,11 @@ int get_window_property(Window window, Atom key, int size, uint8_t **value)
 int get_window_title(Window window, XTextProperty *wm_name)
 {
     int found = XGetTextProperty(local.dpy, window, wm_name,
-                                 local.netatoms[NET_WM_NAME]) &&
+                                 local.atoms[_NET_WM_NAME]) &&
                 wm_name->nitems;
     return found ? found
                  : XGetTextProperty(local.dpy, window, wm_name,
-                                    local.wmatoms[WM_NAME]);
+                                    local.atoms[WM_NAME]);
 }
 
 uint32_t get_window_list(Window **windows)

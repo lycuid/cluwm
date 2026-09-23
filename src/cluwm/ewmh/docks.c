@@ -5,12 +5,38 @@
 #include <stdlib.h>
 #include <string.h>
 
-ENUM(Strut, Left, Right, Top, Bottom, LeftStartY, LeftEndY, RightStartY,
-     RightEndY, TopStartX, TopEndX, BottomStartX, BottomEndX);
+void dock_toggle(const Arg *);
+void dock_mapnotify(const XEvent *);
+void dock_propertynotify(const XEvent *);
+void dock_unmapnotify(const XEvent *);
+void dock_destroynotify(const XEvent *);
+
+const EventHandler dock_event_handlers[LASTEvent] = {
+    [MapNotify]      = dock_mapnotify,
+    [PropertyNotify] = dock_propertynotify,
+    [UnmapNotify]    = dock_unmapnotify,
+    [DestroyNotify]  = dock_destroynotify,
+};
+
+typedef enum Strut {
+    Left,
+    Right,
+    Top,
+    Bottom,
+    LeftStartY,
+    LeftEndY,
+    RightStartY,
+    RightEndY,
+    TopStartX,
+    TopEndX,
+    BottomStartX,
+    BottomEndX,
+    StrutCount,
+} Struct;
 
 typedef struct DockCache {
     Window window;
-    int64_t strut[NullStrut];
+    int64_t strut[StrutCount];
     struct DockCache *next;
 } DockCache;
 
@@ -51,7 +77,7 @@ static inline void update_screen_geometry(void)
 
 static void dcache_update(DockCache *cache, int64_t *strut, int nstrut)
 {
-    memset(cache->strut, 0, sizeof(int64_t) * NullStrut);
+    memset(cache->strut, 0, sizeof(int64_t) * StrutCount);
     memcpy(cache->strut, strut, sizeof(int64_t) * nstrut);
 }
 
@@ -98,11 +124,11 @@ static void manage_dock(Window window)
     Monitor *mon = core->mon;
     /* checking if window is of type dock. */ {
         Atom *dock_window = NULL;
-        core->get_window_property(window, core->netatoms[NET_WM_WINDOW_TYPE], 1,
+        core->get_window_property(window, core->atoms[_NET_WM_WINDOW_TYPE], 1,
                                   (uint8_t **)&dock_window);
         if (!dock_window)
             return;
-        int is_dock = *dock_window != core->netatoms[NET_WM_WINDOW_TYPE_DOCK];
+        int is_dock = *dock_window == core->atoms[_NET_WM_WINDOW_TYPE_DOCK];
         XFree(dock_window);
 
         if (!is_dock)
@@ -110,12 +136,12 @@ static void manage_dock(Window window)
     }
 
     // getting strut values for the dock type window.
-    int nstrut     = NullStrut;
+    int nstrut     = StrutCount;
     int64_t *strut = NULL;
-    core->get_window_property(window, core->netatoms[NET_WM_STRUT_PARTIAL],
+    core->get_window_property(window, core->atoms[_NET_WM_STRUT_PARTIAL],
                               sizeof(int64_t) * nstrut, (uint8_t **)&strut);
     if (!strut)
-        core->get_window_property(window, core->netatoms[NET_WM_STRUT],
+        core->get_window_property(window, core->atoms[_NET_WM_STRUT],
                                   sizeof(int64_t) * (nstrut = 4),
                                   (uint8_t **)&strut);
     if (!strut)
@@ -153,8 +179,8 @@ void dock_mapnotify(const XEvent *xevent)
 void dock_propertynotify(const XEvent *xevent)
 {
     const XPropertyEvent *e = &xevent->xproperty;
-    if (e->atom != core->netatoms[NET_WM_STRUT] &&
-        e->atom != core->netatoms[NET_WM_STRUT_PARTIAL])
+    if (e->atom != core->atoms[_NET_WM_STRUT] &&
+        e->atom != core->atoms[_NET_WM_STRUT_PARTIAL])
         return;
     e->state == PropertyNewValue ? manage_dock(e->window)
                                  : unmanage_dock(e->window);

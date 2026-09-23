@@ -14,9 +14,6 @@ typedef struct {
 #define MAX(x, y) ((x) > (y) ? (x) : (y))
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
-#define ENUM(identifier, ...) /* 'NULL' terminated enum values. */             \
-    typedef enum { __VA_ARGS__, Null##identifier } identifier
-
 #define ITER(iterable)                                                         \
     /* @NOTE: In case of nested, 'it' will repeat */                           \
     for (size_t it = 0; it < LENGTH(iterable); ++it)

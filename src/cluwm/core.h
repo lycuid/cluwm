@@ -15,12 +15,29 @@
 // my the monitor.
 typedef void (*EventHandler)(const XEvent *);
 
-ENUM(CursorType, CurNormal, CurResize, CurMove);
-ENUM(WMAtom, WM_PROTOCOLS, WM_NAME, WM_DELETE_WINDOW, WM_TRANSIENT_FOR,
-     WM_WINDOW_ROLE);
-ENUM(NetAtom, NET_ACTIVE_WINDOW, NET_CLIENT_LIST, NET_WM_BYPASS_COMPOSITOR,
-     NET_WM_NAME, NET_WM_STRUT, NET_WM_STRUT_PARTIAL, NET_WM_WINDOW_TYPE,
-     NET_WM_WINDOW_TYPE_DOCK);
+typedef enum CursorType {
+    CurNormal,
+    CurResize,
+    CurMove,
+    CursorTypeCount
+} CursorType;
+
+typedef enum WMAtom {
+    WM_PROTOCOLS,
+    WM_NAME,
+    WM_DELETE_WINDOW,
+    WM_TRANSIENT_FOR,
+    WM_WINDOW_ROLE,
+    _NET_ACTIVE_WINDOW,
+    _NET_CLIENT_LIST,
+    _NET_WM_BYPASS_COMPOSITOR,
+    _NET_WM_NAME,
+    _NET_WM_STRUT,
+    _NET_WM_STRUT_PARTIAL,
+    _NET_WM_WINDOW_TYPE,
+    _NET_WM_WINDOW_TYPE_DOCK,
+    WMAtomCount,
+} WMAtom;
 
 // These are mainly the values that don't (shouldn't) change throughout the
 // application lifetime.
@@ -28,8 +45,8 @@ typedef struct Core {
     bool running;
     Display *dpy;
     Monitor *mon;
-    Cursor cursors[NullCursorType];
-    Atom wmatoms[NullWMAtom], netatoms[NullNetAtom];
+    Cursor cursors[CursorTypeCount];
+    Atom atoms[WMAtomCount];
     FILE *logger;
 
     void (*init)(void);

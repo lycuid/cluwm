@@ -34,7 +34,7 @@ void window_rule_apply(Client *c)
         } break;
         case ResWindowRole: {
             if (XGetTextProperty(core->dpy, c->window, &property,
-                                 core->wmatoms[WM_WINDOW_ROLE]))
+                                 core->atoms[WM_WINDOW_ROLE]))
                 if (apply_window_rule(rule, (char *)property.value))
                     goto DONE;
         } break;
