@@ -60,6 +60,20 @@ static inline void handle_bypassed(Client *c)
         XFree(value);
 }
 
+static inline void handle_dialog(Client *c)
+{
+    if (!c)
+        return;
+    Atom *atom = NULL;
+    core->get_window_property(c->window, core->atoms[_NET_WM_WINDOW_TYPE], 1,
+                              (uint8_t **)&atom);
+    if (!atom)
+        return;
+    if (*atom == core->atoms[_NET_WM_WINDOW_TYPE_DIALOG])
+        SET(c->state, ClFloating);
+    XFree(atom);
+}
+
 void ewmh_maprequest(const XEvent *xevent)
 {
     const XMapRequestEvent *e = &xevent->xmaprequest;
@@ -71,7 +85,11 @@ void ewmh_maprequest(const XEvent *xevent)
     update_client_list(0);
 }
 
-void ewmh_clientadd(Client *c) { handle_bypassed(c); }
+void ewmh_clientadd(Client *c)
+{
+    handle_dialog(c);
+    handle_bypassed(c);
+}
 
 void ewmh_propertynotify(const XEvent *xevent)
 {

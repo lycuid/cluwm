@@ -36,6 +36,7 @@ typedef enum WMAtom {
     _NET_WM_STRUT_PARTIAL,
     _NET_WM_WINDOW_TYPE,
     _NET_WM_WINDOW_TYPE_DOCK,
+    _NET_WM_WINDOW_TYPE_DIALOG,
     WMAtomCount,
 } WMAtom;
 

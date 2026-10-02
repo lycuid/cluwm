@@ -66,6 +66,7 @@ void core_init(void)
     ATOM_REPR(_NET_WM_STRUT_PARTIAL);
     ATOM_REPR(_NET_WM_WINDOW_TYPE);
     ATOM_REPR(_NET_WM_WINDOW_TYPE_DOCK);
+    ATOM_REPR(_NET_WM_WINDOW_TYPE_DIALOG);
 #undef ATOM_REPR
 
     XStoreName(local.dpy, DefaultRootWindow(local.dpy), NAME "-" VERSION);
